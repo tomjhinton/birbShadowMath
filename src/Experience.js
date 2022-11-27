@@ -31,8 +31,9 @@ export default function Experience(){
    let [symbol, setSymbol] = useState('+')
 
    let [numbers, setNumbers] = useState(9)
+   let [spotS, setSpotS] = useState(1.5)
 
-   const [counter, setCounter] = useState(5);
+   const [counter, setCounter] = useState(10);
     const [score, setScore] = useState(0);
 
     const submit = (e) =>{
@@ -40,6 +41,7 @@ export default function Experience(){
        
 
         if(form.current.value  == eval(first+symbol+second)){
+            setCounter(counter + 10)
             setScore(score + 1)
             setNumbers(numbers + 3 )
             setFirst(Math.floor(Math.random()*numbers))
@@ -53,19 +55,39 @@ export default function Experience(){
             symbolO.current.position.set(0 + offset, 0 + offset, 0)
             secondO.current.position.set(4 + offset, 0 + offset, 0)
 
+            if(spotS > 1.5){
+                setSpotS(spotS -1.)
+
+            }
+
            
         }
 
         else if(form.current.value !== eval(first+symbol+second)){
             setScore(0)
             setNumbers(9)
+            clearTimeout(timerRef.current);
+        timerRef.current = null;
+        setCounter(0)
         }
     }
 
     
-
+    const timerRef = useRef();
     useEffect(() => {
-        counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+        if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+        if(counter === 0){
+            setScore(0)
+            setNumbers(9)
+        }
+        if (counter > 0) {
+            timerRef.current = setTimeout(() => setCounter(counter - 1), 1000);
+          }
+       
+
       }, [counter]);
 
     return(
@@ -158,7 +180,29 @@ export default function Experience(){
             <meshBasicMaterial
           />
                 
-                Score: {score}
+                Score : {score}
+
+            </Text3D>
+
+            <Text3D 
+            ref={time}
+            font='./fonts/helvetiker_regular.typeface.json'
+            size={1}
+            height={ 0.2 }
+            curveSegments={ 12 }
+            bevelEnabled
+            bevelThickness={0.02}
+            bevelSize={ 0.02 }
+            bevelOffset={ 0 }
+            bevelSegments={ 5 }
+            castShadow
+            position={[-12,5, 0 ]}
+            time={10}
+            >
+            <meshBasicMaterial
+          />
+                
+                Timer : {counter}
 
             </Text3D>
 
@@ -184,7 +228,7 @@ export default function Experience(){
 
             castShadow
             // position={ [ 4, 4, 1 ] }
-            intensity={ 1.5 }
+            intensity={ spotS }
             shadow-mapSize={ [ 1024, 1024 ] }
             shadow-camera-near={ 1 }
             shadow-camera-far={ 10 }
