@@ -17,7 +17,7 @@ export default function Experience(){
 
 
     useFrame(({ mouse }) => {
-        console.log(mouse)
+       
       const x = (mouse.x * viewport.width) / 2
       const y = (mouse.y * viewport.height) / 2
       ref.current.position.set(x, y, 0)
@@ -32,12 +32,15 @@ export default function Experience(){
 
    let [numbers, setNumbers] = useState(9)
 
+   const [counter, setCounter] = useState(5);
+    const [score, setScore] = useState(0);
+
     const submit = (e) =>{
         e.preventDefault()
-        console.log(form.current.value)
+       
 
         if(form.current.value  == eval(first+symbol+second)){
-            console.log(form.current.value)
+            setScore(score + 1)
             setNumbers(numbers + 3 )
             setFirst(Math.floor(Math.random()*numbers))
             setSecond(Math.floor(Math.random()*numbers))
@@ -49,11 +52,17 @@ export default function Experience(){
             firstO.current.position.set(-4 + offset, 0 + offset, 0)
             symbolO.current.position.set(0 + offset, 0 + offset, 0)
             secondO.current.position.set(4 + offset, 0 + offset, 0)
+
+           
+        }
+
+        else if(form.current.value !== eval(first+symbol+second)){
+            setScore(0)
+            setNumbers(9)
         }
     }
 
-    const [counter, setCounter] = useState(5);
-    const [score, setScore] = useState(0);
+    
 
     useEffect(() => {
         counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
@@ -129,6 +138,27 @@ export default function Experience(){
             opacity={0.}/>
                 
                {second}
+
+            </Text3D>
+
+            <Text3D 
+            ref={scoreRef}
+            font='./fonts/helvetiker_regular.typeface.json'
+            size={1}
+            height={ 0.2 }
+            curveSegments={ 12 }
+            bevelEnabled
+            bevelThickness={0.02}
+            bevelSize={ 0.02 }
+            bevelOffset={ 0 }
+            bevelSegments={ 5 }
+            castShadow
+            position={[12,5, 0 ]}
+            >
+            <meshBasicMaterial
+          />
+                
+                Score: {score}
 
             </Text3D>
 
